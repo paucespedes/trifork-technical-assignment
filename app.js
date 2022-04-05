@@ -1,100 +1,66 @@
-
-//Get current number of organizations on Github
+//Always start getting and displaying current number of organizations on Github
 requestTotalOrgs();
+const nameForm = document.getElementById('name-form');
 
-// Get the GitHub username input form
-const gitHubForm = document.getElementById('gitHubForm');
+// Listen for submissions on organization name input form
+nameForm.addEventListener('submit', (e) => {
 
-// Listen for submissions on GitHub username input form
-gitHubForm.addEventListener('submit', (e) => {
-    
-    // Prevent default form submission action
     e.preventDefault();
-
-    // Get the GitHub username input field on the DOM
-    let usernameInput = document.getElementById('usernameInput');
-
-    // Get the value of the GitHub username input field
-    let gitHubUsername = usernameInput.value;          
-
-    // Run GitHub API function, passing in the GitHub username
-    requestUserRepos(gitHubUsername);
+    let organizationInput = document.getElementById('organization-name');
+    let organizationName = organizationInput.value;
+    requestOrgRepoInfo(organizationName);
 
 })
 
 
-function requestUserRepos(username){
-    
-    // Create new XMLHttpRequest object
-    const xhr = new XMLHttpRequest();
-    
-    // GitHub endpoint, dynamically passing in specified username
-    const url = `https://api.github.com/users/${username}/repos`;
-   
-    // Open a new connection, using a GET request via URL endpoint
-    // Providing 3 arguments (GET/POST, The URL, Async True/False)
-    xhr.open('GET', url, true);
-    
-    // When request is received
-    // Process it here
-    xhr.onload = function () {
-    
-        // Parse API data into JSON
-        const data = JSON.parse(this.response);
-        
-        // Loop over each object in data array
-        for (let i in data) {
+// Given the organization name request and show to frontend its biggest repo by size 
+// and its total number of repos
+function requestOrgRepoInfo(organizationName) {
 
-            // Get the ul with id of of userRepos
-            let ul = document.getElementById('userRepos');
-    
-            // Create variable that will create li's to be added to ul
-            let li = document.createElement('li');
-            
-            // Add Bootstrap list item class to each li
-            li.classList.add('list-group-item')
-        
-            // Create the html markup for each li
-            li.innerHTML = (`
-                <p><strong>Repo:</strong> ${data[i].name}</p>
-                <p><strong>Description:</strong> ${data[i].description}</p>
-                <p><strong>URL:</strong> <a href="${data[i].html_url}">${data[i].html_url}</a></p>
-            `);
-            
-            // Append each li to the ul
-            ul.appendChild(li);
-        
+    // Create the get request that will retrieve the data
+    const xhr = new XMLHttpRequest();
+    const url = `https://api.github.com/search/repositories?q=org:${organizationName}`;
+    xhr.open('GET', url, true);
+
+    // When request is received is processed here
+    xhr.onload = function () {
+
+        const data = JSON.parse(this.response);
+        if (data.items) {
+            data.items.sort((a, b) => parseInt(b.size) - parseInt(a.size));
+        }
+
+        // Display obtained results at html
+        if (!data.errors) {
+            document.getElementById("searchResults").innerHTML =
+                `<h3 class="text-center">${organizationName} search results</h3>
+                 <p class="text-center mt-4"><strong>Number of repositories:</strong> ${data.total_count}</p>
+                 <p class="text-center"><strong>Biggest Repository:</strong> ${data.items[0].name} (${data.items[0].size} Kbytes)</p>`;
+        } else {
+            document.getElementById("searchResults").innerHTML = '<h6 class="text-center text-danger">Organization not found</h6>';
         }
 
     }
-    
-    // Send the request to the server
+
     xhr.send();
 }
 
-function requestTotalOrgs(){
-    // Create new XMLHttpRequest object
+// Request and show to frontend all searched data
+function requestTotalOrgs() {
+
+    // Create the get request that will retrieve the data
     const xhr = new XMLHttpRequest();
-
-    // GitHub endpoint, dynamically passing in specified username
     const url = 'https://api.github.com/search/users?q=type:org';
+    xhr.open('GET', url, true);
 
-    // Open a new connection, using a GET request via URL endpoint
-    // Providing 3 arguments (GET/POST, The URL, Async True/False)
-    fetch('GET', url, true);
-
-    // When request is received
-    // Process it here
+   // When request is received is processed here
     xhr.onload = function () {
 
-        // Parse API data into JSON;
-        //console.log(this.response.XMLHttpRequest)
         const data = JSON.parse(this.response);
-        console.log(data.total_count);
-        //document.getElementById("total-orgs").innerHTML = data.total-count;
+
+        // Display obtained results at html
+        document.getElementById("total-orgs").innerHTML = data.total_count;
     }
 
-    // Send the request to the server
     xhr.send();
-
 }

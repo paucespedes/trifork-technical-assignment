@@ -9,19 +9,19 @@
 </head>
 <body>
     <div class="container alig-center">
-        <h3 class="text-center mt-5">Organization Github info</h3>
-        <h6 class="text-center">Number of current organizations on github: </h6>
+        <h1 class="text-center mt-5">Organization Github info</h1>
+        <h6 class="text-center">Current number of  organizations on github: </h6>
         <h6 id="total-orgs" class="text-center"></h6>
         
-        <form id="gitHubForm" class="form-inline mx-auto" style="width: 280px">
-            <input id="usernameInput" class="form-control mb-2 mt-5" type="text" name="userame" placeholder="Organization Name">
+        <form id="name-form" class="form-inline mx-auto" style="width: 280px">
+            <input id="organization-name" class="form-control mb-2 mt-5" type="text" name="organization" placeholder="Organization Name">
             <div class="col text-center">
-                <input type="submit" class="btn btn-primary ml-2 mb-5" value="Submit">
+                <input type="submit" class="btn btn-primary mt-1 mb-5" value="Submit">
             </div>
         </form>
-        <ul id="userRepos" class="list-group mx-auto mb-5" style="width: 500px">
+        <div id="searchResults" >
+        </div>
 
-        </ul>
 	</div>
 	<script src="app.js"></script>
 </body>
