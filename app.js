@@ -32,10 +32,11 @@ function requestOrgRepoInfo(organizationName) {
 
         // Display obtained results at html
         if (!data.errors) {
+            var size = data.items[0].size * 1024; // supposing conversion is done by powers of 2
             document.getElementById("searchResults").innerHTML =
                 `<h3 class="text-center">${organizationName} search results</h3>
                  <p class="text-center mt-4"><strong>Number of repositories:</strong> ${data.total_count}</p>
-                 <p class="text-center"><strong>Biggest Repository:</strong> ${data.items[0].name} (${data.items[0].size} Kbytes)</p>`;
+                 <p class="text-center"><strong>Biggest Repository:</strong> ${data.items[0].name} (${size} bytes)</p>`;
         }
         // If got an error display to the user that the organization was unreachable
         else {
