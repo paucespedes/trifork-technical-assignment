@@ -36,7 +36,9 @@ function requestOrgRepoInfo(organizationName) {
                 `<h3 class="text-center">${organizationName} search results</h3>
                  <p class="text-center mt-4"><strong>Number of repositories:</strong> ${data.total_count}</p>
                  <p class="text-center"><strong>Biggest Repository:</strong> ${data.items[0].name} (${data.items[0].size} Kbytes)</p>`;
-        } else {
+        }
+        // If got an error display to the user that the organization was unreachable
+        else {
             document.getElementById("searchResults").innerHTML = '<h6 class="text-center text-danger">Organization not found</h6>';
         }
 
